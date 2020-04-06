@@ -1,13 +1,12 @@
 # -*- coding:utf8 -*-
-from __future__ import (
-    division, print_function, absolute_import, unicode_literals
-)
 """cron job structure
 """
 import importlib
 import types
 import six
 from crontab import CronTab
+from threading import RLock
+import time
 
 
 class CronJob(object):
@@ -22,6 +21,8 @@ class CronJob(object):
         """Job action"""
         self._crontab = None
         self.crontab = None
+        self._last_executed = None
+        self._lock = RLock()
 
     def __repr__(self):
         elements = []
@@ -58,17 +59,17 @@ class CronJob(object):
         self.crontab = crontab
         self._crontab = CronTab(self.crontab)
 
-    def is_runnable(self, time):
+    def is_runnable(self, current_time):
         """Check whether job run action at specified time
 
-        :param time: Time to run action
-        :type time: datetime.datetime
+        :param current_time: Time to run action
+        :type current_time: datetime.datetime
         :return: Job is runnable or not
         :rtype: boolean
         """
         if self._crontab is not None:
-            return self._crontab.test(time)
-        return time.strftime(self.trigger_format) == self.trigger_time
+            return self._crontab.test(current_time)
+        return current_time.strftime(self.trigger_format) == self.trigger_time
 
     def set_action(self, action, *args):
         """Set action and arguments to run in triggered time
@@ -96,9 +97,15 @@ class CronJob(object):
         :type do_time: datetime.datetime
         :return: Returned value from action
         """
-        if len(self.action_args) > 0:
-            return self.action(plugin, do_time, *self.action_args)
-        return self.action(plugin, do_time)
+        with self._lock:
+            now = time.time()
+            if now - self._last_executed > 60:
+                self._last_executed = now
+                if len(self.action_args) > 0:
+                    return self.action(plugin, do_time, *self.action_args)
+                return self.action(plugin, do_time)
+            else:
+                self.log.info("Did not execute [%s].", self.action)
 
 
 def load_from_string(crontab, format='crontab'):
