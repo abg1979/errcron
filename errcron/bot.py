@@ -11,7 +11,6 @@ class CrontabMixin(object):
     If you will use crontab by it, call activate_crontab
     """
 
-    _activated = False
     _lock = RLock()
     _crontab = None
 
@@ -19,8 +18,10 @@ class CrontabMixin(object):
         """Activate polling function and register first crontab
         """
         with self._lock:
-            if self._activated:
+            try:
                 self.stop_poller(self.poll_crontab)
+            except:
+                self.log.warn("Could not stop poller.", exc_info=True)
             self._crontab = []
             if hasattr(self, 'CRONTAB'):
                 for crontab_spec in self.CRONTAB:
@@ -38,7 +39,6 @@ class CrontabMixin(object):
                     job.set_action(action_, *args['args'])
                     self._crontab.append(job)
             self.start_poller(30, self.poll_crontab)
-            self._activated = True
 
     def poll_crontab(self):
         """Check crontab and run target jobs
