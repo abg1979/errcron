@@ -47,9 +47,7 @@ class CrontabMixin(object):
         """Check crontab and run target jobs
         """
         polled_time = datetime.datetime.now()
-        if polled_time.second >= 30:
-            self.log.debug('Skip cronjobs in {}'.format(polled_time))
-            return
+        polled_time = polled_time.replace(second=0, microsecond=0)
         for job in self._crontab:
             self.log.debug("Testing cronjob [%s]", job)
             if not job.is_runnable(polled_time):
