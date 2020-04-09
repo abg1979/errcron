@@ -18,10 +18,6 @@ class CrontabMixin(object):
     def list_crontab(self):
         return self._crontab
 
-    def activate(self):
-        super().activate()
-        self.activate_crontab()
-
     def _get_current_time(self):
         if hasattr(self, 'TIMEZONE'):
             # Plugin class has TIMEZONE
@@ -66,10 +62,6 @@ class CrontabMixin(object):
         """Check crontab and run target jobs
         """
         polled_time = self._get_current_time()
-        if polled_time.second >= 30:
-            self.log.debug('Skip cronjobs in {}'.format(polled_time))
-            return
-        polled_time = datetime.datetime.now()
         polled_time = polled_time.replace(second=0, microsecond=0)
         for job in self._crontab:
             self.log.debug("Testing cronjob [%s]", job)
