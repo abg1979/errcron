@@ -69,8 +69,10 @@ class CronJob(object):
         :rtype: boolean
         """
         if self._crontab is not None:
-            return self._crontab.test(current_time)
-        return current_time.strftime(self.trigger_format) == self.trigger_time
+            # check as 0 second
+            zero_time = time.replace(second=0)
+            return self._crontab.test(zero_time)
+        return time.strftime(self.trigger_format) == self.trigger_time
 
     def set_action(self, action, *args):
         """Set action and arguments to run in triggered time

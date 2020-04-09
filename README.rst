@@ -3,19 +3,37 @@ Crontab implementation for Errbot
 
 It is extention for plugin of Errbot to implement poller llike crontab.
 
+.. image:: https://img.shields.io/pypi/v/errcron.svg
+   :target: https://pypi.org/project/errcron/
+   :alt: Version in PyPI
+
+.. image:: https://img.shields.io/pypi/pyversions/errcron.svg
+   :target: https://pypi.org/project/errcron/
+   :alt: python versions
+
+.. image:: https://img.shields.io/pypi/l/errcron.svg
+   :target: https://pypi.org/project/errcron/
+   :alt: License
+
+.. image:: https://requires.io/github/attakei/errcron/requirements.svg?branch=master
+   :target: https://requires.io/github/attakei/errcron/requirements/?branch=master
+   :alt: Requirements Status
+
+
 Requirements
 ------------
 
-* Python 2.7,3.4 or 3.5
+* Python 2.7 or 3.4+
 * `six <https://pypi.python.org/pypi/six>`_
 * `crontab <https://pypi.python.org/pypi/python-crontab>`_
+* `pytz <https://pypi.python.org/pypi/pytz>`_
 * `(Errbot) <https://pypi.python.org/pypi/Errbot>`_
 
 
 Installation
 ------------
 
-.. code-block::
+.. code-block:: bash
 
    $ pip install errcron
    or
@@ -30,15 +48,18 @@ Example
 
 .. code-block:: python
 
-   class ClockTimer(BotPlugin, CrontabMixin):
+   from errcron import CrontabMixin
+
+
+   class ClockTimer(CrontabMixin, BotPlugin):
        CRONTAB = [
            '@hourly .post_hourly',
            '0 8 * * * .post_morning_call @attakei'
        ]
 
        def activate(self):
-           super(Crontab, self).activate()
-           self.activate_crontab()
+           super().activate()
+           # some expression
 
        def post_hourly(self, polled_time):
            user =  self.build_identifier('#general')
@@ -54,15 +75,20 @@ Example
 #. Run
 
 
-Changes
--------
+Latest changes
+--------------
 
-version 0.3
-^^^^^^^^^^^
+version 0.4.4
+^^^^^^^^^^^^^
 
-* Implement crontab format.
-* Implement be able to run instance method of plugin.
-* Change plling interval
+* Fix for latest crontab-parser
+* Fix test targets in Travis-CI
+
+version 0.4.3
+^^^^^^^^^^^^^
+
+* Add python 3.6 for test target (compatible)
+* Can import as ``from errcron import CrontabMixin``
 
 
 License

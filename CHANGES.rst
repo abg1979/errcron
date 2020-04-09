@@ -1,18 +1,16 @@
-Changes
-=======
+All changelogs
+==============
 
-ver 0.3
--------
+For version 0.4.x
+-----------------
 
-0.3.0
-^^^^^
+version 0.4.1
+^^^^^^^^^^^^^
 
-* Implement crontab format.
-* Implement be able to run instance method of plugin.
-* Change plling interval
+* Fix missing dependencies
 
+version 0.4
+^^^^^^^^^^^
 
-ver 0.1
--------
-
-* Released
+* Enable class TIMEZONE definition
+* Set order of extends

@@ -9,18 +9,6 @@ from setuptools.command.test import test as TestCommand
 
 
 here = os.path.abspath(os.path.dirname(__file__))
-package_requires = [
-    # 'errbot',
-    'six',
-    'crontab',
-]
-test_requires = [
-    'pytest-pep8',
-    'pytest-flakes',
-    'pytest-cov',
-    'pytest',
-    'freezegun',
-]
 
 
 def read_file(path):
@@ -64,6 +52,11 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
+def find_requires(requirements):
+    reqs = read_file(os.path.join(here, requirements))
+    return reqs.strip().split()
+
+
 setup(
     name='errcron',
     version=find_version('errcron/__init__.py'),
@@ -79,13 +72,14 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Communications :: Chat',
     ],
     keywords='errbot plugin crontab',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    install_requires=package_requires,
-    tests_require=test_requires,
-    extras_require={'test': test_requires},
+    install_requires=find_requires('requirements.txt'),
+    tests_require=find_requires('tests/requirements.txt'),
+    extras_require={'test': find_requires('tests/requirements.txt')},
     cmdclass={
         'test': PyTest,
     },

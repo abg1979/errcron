@@ -64,3 +64,4 @@ target/
 .python-version
 venv
 .idea
+.venv

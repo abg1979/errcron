@@ -5,7 +5,7 @@ from __future__ import (
 import logging
 import six
 from freezegun import freeze_time
-from errcron.bot import CrontabMixin
+from errcron import CrontabMixin
 from errcron.cronjob import CronJob
 
 

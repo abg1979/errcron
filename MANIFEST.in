@@ -2,10 +2,7 @@ include README.rst
 include CHANGES.rst
 include tox.ini
 include setup.cfg
+include requirements.txt
 include *.py
-recursive-include docs *
-recursive-include tests *
-recursive-exclude docs *.pyc
-recursive-exclude docs *.pyo
-recursive-exclude tests *.pyc
-recursive-exclude tests *.pyo
+recursive-exclude docs *
+recursive-exclude tests *

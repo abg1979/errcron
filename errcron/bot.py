@@ -2,6 +2,7 @@
 """Bot class extensions
 """
 import datetime
+import pytz
 from errcron import cronjob
 from threading import RLock
 
@@ -16,6 +17,24 @@ class CrontabMixin(object):
 
     def list_crontab(self):
         return self._crontab
+
+    def activate(self):
+        super().activate()
+        self.activate_crontab()
+
+    def _get_current_time(self):
+        if hasattr(self, 'TIMEZONE'):
+            # Plugin class has TIMEZONE
+            timezone = pytz.timezone(self.TIMEZONE)
+            polled_time = datetime.datetime.now(timezone)
+        elif hasattr(getattr(self, 'bot_config', None), 'TIMEZONE'):
+            # Errbot config has TIMEZONE
+            timezone = pytz.timezone(self.bot_config.TIMEZONE)
+            polled_time = datetime.datetime.now(timezone)
+        else:
+            # Use machine timezone
+            polled_time = datetime.datetime.now()
+        return polled_time
 
     def activate_crontab(self):
         """Activate polling function and register first crontab
@@ -46,6 +65,10 @@ class CrontabMixin(object):
     def poll_crontab(self):
         """Check crontab and run target jobs
         """
+        polled_time = self._get_current_time()
+        if polled_time.second >= 30:
+            self.log.debug('Skip cronjobs in {}'.format(polled_time))
+            return
         polled_time = datetime.datetime.now()
         polled_time = polled_time.replace(second=0, microsecond=0)
         for job in self._crontab:
