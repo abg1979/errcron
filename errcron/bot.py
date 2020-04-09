@@ -14,6 +14,9 @@ class CrontabMixin(object):
     _lock = RLock()
     _crontab = None
 
+    def list_crontab(self):
+        return self._crontab
+
     def activate_crontab(self):
         """Activate polling function and register first crontab
         """
