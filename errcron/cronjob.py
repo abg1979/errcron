@@ -12,7 +12,7 @@ import time
 class CronJob(object):
     """Job runner for errcron, handling job running trigger and action
     """
-    def __init__(self):
+    def __init__(self, log=None):
         self.trigger_format = None
         """datetime format by trigger to run job"""
         self.trigger_time = None
@@ -23,6 +23,7 @@ class CronJob(object):
         self.crontab = None
         self._last_executed = 0
         self._lock = RLock()
+        self.log = log
 
     def __repr__(self):
         elements = []

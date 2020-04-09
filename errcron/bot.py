@@ -29,7 +29,7 @@ class CrontabMixin(object):
             if hasattr(self, 'CRONTAB'):
                 for crontab_spec in self.CRONTAB:
                     args = cronjob.parse_crontab(crontab_spec)
-                    job = cronjob.CronJob()
+                    job = cronjob.CronJob(log=self.log)
                     if args['_timer'] == 'datetime':
                         job.set_triggers(args['trigger_format'], args['trigger_time'])
                     if args['_timer'] == 'crontab':
