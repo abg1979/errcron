@@ -48,6 +48,7 @@ class CrontabMixin(object):
             self.log.debug('Skip cronjobs in {}'.format(polled_time))
             return
         for job in self._crontab:
+            self.log.debug("Testing cronjob [%s]", job)
             if not job.is_runnable(polled_time):
                 continue
             job.do_action(self, polled_time)
