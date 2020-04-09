@@ -62,4 +62,6 @@ target/
 .ipynb_checkpoints
 
 .python-version
+venv
+.idea
 .venv
