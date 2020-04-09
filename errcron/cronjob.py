@@ -21,7 +21,7 @@ class CronJob(object):
         """Job action"""
         self._crontab = None
         self.crontab = None
-        self._last_executed = None
+        self._last_executed = 0
         self._lock = RLock()
 
     def __repr__(self):
