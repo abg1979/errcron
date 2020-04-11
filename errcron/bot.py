@@ -19,13 +19,16 @@ class CrontabMixin(object):
         return self._crontab
 
     def _get_current_time(self):
-        if hasattr(self, 'TIMEZONE'):
-            # Plugin class has TIMEZONE
-            timezone = pytz.timezone(self.TIMEZONE)
+        if 'timezone' in self.config:
+            timezone = pytz.timezone(self.config['timezone'])
             polled_time = datetime.datetime.now(timezone)
         elif hasattr(getattr(self, 'bot_config', None), 'TIMEZONE'):
             # Errbot config has TIMEZONE
             timezone = pytz.timezone(self.bot_config.TIMEZONE)
+            polled_time = datetime.datetime.now(timezone)
+        elif hasattr(self, 'TIMEZONE'):
+            # Plugin class has TIMEZONE
+            timezone = pytz.timezone(self.TIMEZONE)
             polled_time = datetime.datetime.now(timezone)
         else:
             # Use machine timezone
