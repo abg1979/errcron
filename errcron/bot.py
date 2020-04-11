@@ -19,7 +19,7 @@ class CrontabMixin(object):
         return self._crontab
 
     def _get_current_time(self):
-        if 'timezone' in self.config:
+        if self.config is not None and 'timezone' in self.config:
             timezone = pytz.timezone(self.config['timezone'])
             polled_time = datetime.datetime.now(timezone)
         elif hasattr(getattr(self, 'bot_config', None), 'TIMEZONE'):
