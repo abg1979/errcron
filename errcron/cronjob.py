@@ -106,7 +106,7 @@ class CronJob(object):
                     return self.action(plugin, do_time, *self.action_args)
                 return self.action(plugin, do_time)
             else:
-                self.log.info("Did not execute [%s].", self.action)
+                self.log.info("Action at [%s] ignored [%s].", do_time, self.action)
 
 
 def load_from_string(crontab, format='crontab'):
